@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    CHANGE PASSWORD
+{% endblock %}
+{%block sett%}
+<li><a href="{{ url_for('settings') }}">Settings</a></li>
+{%endblock%}
+
+
+
+{% block main %}
+<form action="{{ url_for('changep') }}" method="post">
+        <fieldset>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="opass" placeholder="old password" type="password"/>
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="npass" placeholder="password" type="Password"/>
+            </div>
+             <div class="form-group">
+                <input class="form-control" name="vpass" placeholder="password" type="Password"/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Change Passwo rd</button>
+            </div>
+        </fieldset>
+</form>
+
+   
+{% endblock %}

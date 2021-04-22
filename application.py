@@ -30,14 +30,16 @@ app.config["SESSION_TYPE"] = "filesystem"
 # session(app)
 
 # configure CS50 Library to use SQLite database
-dbs = sqlite3.connect("finance.db")
+dbs = sqlite3.connect("finance.db",check_same_thread=False)
 db=dbs.cursor()
 @app.route("/")
 @login_required
 def index():
-    rows=db.execute("SElect * from users Where id=:id",id=session["user_id"] )
-    bal=rows[0]["cash"]
-    rows=db.execute("SELECT * from purchase where userid=:id",id =session["user_id"])
+    rows=db.execute("SElect * from users Where id=(?)",(session["user_id"] ,))
+    rows=db.fetchall()
+    print(rows)
+    bal=rows[0][3]
+    rows=db.execute("SELECT * from purchase where userid=(?)",(session["user_id"],))
     x=set()
     for user in rows:
         x.add(user["symbol"])
@@ -58,7 +60,7 @@ def index():
     for key in pricel:
         total+=pricel[key]*sharel[key]
     dbs.commit()
-    dbs.close()
+    
 
     return render_template("index.html",namel=namel,pricel=pricel,bal=bal,usd=usd,x=x,sharel=sharel,inshare=total)
 
@@ -122,14 +124,14 @@ def buy():
 @login_required
 def history():
     """Show history of transactions."""
-    rows=db.execute("SELECT * from purchase where userid=:id",id =session["user_id"])
-
+    rows=db.execute("SELECT * from purchase where userid=(?)", (session["user_id"]))
+    dbs.commit()
     return render_template("history.html",rows=rows,usd=usd)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in."""
-
+    db=dbs.cursor()
     # forget any user_id
     session.clear()
 
@@ -145,14 +147,15 @@ def login():
             return apology("must provide password")
 
         # query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
-
+        uname=request.form.get("username")
+        db.execute("SELECT * FROM users WHERE username = (?)", (uname,))
+        rows=db.fetchall()
         # ensure username exists and password is correct
-        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["hash"]):
+        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), str(rows[0][2])):
             return apology("invalid username and/or password")
 
         # remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0][1]
 
         # redirect user to home page
         return redirect(url_for("index"))
@@ -202,13 +205,15 @@ def register():
         # query database for username
         ha=pwd_context.hash(request.form.get("password"))
         uname=request.form.get("username")
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+        db.execute("SELECT * FROM users WHERE username = (?)", (uname,))
+        rows=db.fetchall()
         if len(rows)==1:
             return apology("user alredy exist")
 
-        db.execute("INSERT INTO users (username,hash) VALUES (:username,:hashed)",username=request.form.get("username"),hashed=ha)
+        db.execute("INSERT INTO users (username,hash) VALUES (?,?)",(uname,ha))
 
-
+        dbs.commit()
+        db.close()
         # redirect user to home page
         return redirect(url_for("login"))
 

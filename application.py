@@ -318,9 +318,10 @@ def addc():
         return redirect(url_for("index"))
     else:
         return render_template("addc.html")
+app.secret_key = os.urandom(24)
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.secret_key = 'super 0808secret key'
+    # app.secret_key = 'super 0808secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     
     # session.init_app(app)

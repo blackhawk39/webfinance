@@ -1,6 +1,7 @@
-from cs50 import SQL
+
+import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, url_for
-from flask_session import Session
+# from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import mkdtemp
 
@@ -25,11 +26,11 @@ app.jinja_env.filters["usd"] = usd
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+# Session(app)
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
-
+dbs = sqlite3.connect("finance.db")
+db=dbs.cursor()
 @app.route("/")
 @login_required
 def index():
@@ -55,7 +56,8 @@ def index():
     total=0
     for key in pricel:
         total+=pricel[key]*sharel[key]
-
+    dbs.commit()
+    dbs.close()
 
     return render_template("index.html",namel=namel,pricel=pricel,bal=bal,usd=usd,x=x,sharel=sharel,inshare=total)
 
@@ -315,3 +317,13 @@ def addc():
         return redirect(url_for("index"))
     else:
         return render_template("addc.html")
+if __name__ == '__main__':
+    # Threaded option to enable multiple instances for multiple user access support
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    # sess.init_app(app)
+
+    app.debug = True
+    app.run()
+

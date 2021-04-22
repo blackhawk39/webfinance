@@ -26,7 +26,11 @@ app.jinja_env.filters["usd"] = usd
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+<<<<<<< HEAD
 # Session(app)
+=======
+session(app)
+>>>>>>> 123ca85a9eec610e06882510762ce298016f5395
 
 # configure CS50 Library to use SQLite database
 dbs = sqlite3.connect("finance.db")

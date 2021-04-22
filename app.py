@@ -1,9 +1,15 @@
 # from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, url_for
 #from passlib.apps import custom_app_context as pwd_context
+<<<<<<< HEAD
 # from tempfile import mkdtemp
 
 # from helpers import *
+=======
+from tempfile import mkdtemp
+
+from helpers import *
+>>>>>>> 123ca85a9eec610e06882510762ce298016f5395
 
 # configure application
 app = Flask(__name__)
@@ -30,6 +36,10 @@ app = Flask(__name__)
 # db = SQL("sqlite:///finance.db")
 
 @app.route("/")
+<<<<<<< HEAD
+=======
+@login_required
+>>>>>>> 123ca85a9eec610e06882510762ce298016f5395
 def index():
     # rows=db.execute("SElect * from users Where id=:id",id=session["user_id"] )
     # bal=rows[0]["cash"]
@@ -54,7 +64,12 @@ def index():
     # for key in pricel:
     #     total+=pricel[key]*sharel[key]
 
+<<<<<<< HEAD
     return render_template('lol.html')
+=======
+
+    return render_template("apology.html")
+>>>>>>> 123ca85a9eec610e06882510762ce298016f5395
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)

@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    SOLD
+{% endblock %}
+
+{% block main %}
+
+                <header>
+                    <div class="alert alert-info" role="alert">
+                        Sold!
+                    </div>
+                </header>
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="4"></td>
+                <td>{{usd(bal+inshare)}}</td>
+            </tr>
+        </tfoot>
+        <tbody>
+                {%for a in x%}
+                <tr>
+                    <td>{{a}}</td>
+                    <td>{{namel[a]}}</td>
+                    <td>{{sharel[a]}}</td>
+                    <td>{{usd(pricel[a])}}</td>
+                    <td>{{usd(pricel[a]*sharel[a])}}</td>
+                </tr>
+                    {%endfor%}
+            <tr>
+                <td colspan="4">CASH</td>
+                <td>{{usd(bal)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+{% endblock %}

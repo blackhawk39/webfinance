@@ -35,6 +35,7 @@ db=dbs.cursor()
 @app.route("/")
 @login_required
 def index():
+    db=dbs.cursor()
     rows=db.execute("SElect * from users Where id=(?)",(session["user_id"] ,))
     rows=db.fetchall()
     print(rows)
@@ -124,7 +125,7 @@ def buy():
 @login_required
 def history():
     """Show history of transactions."""
-    rows=db.execute("SELECT * from purchase where userid=(?)", (session["user_id"]))
+    rows=db.execute("SELECT * from purchase where userid=(?)", (session["user_id"],))
     dbs.commit()
     return render_template("history.html",rows=rows,usd=usd)
 
